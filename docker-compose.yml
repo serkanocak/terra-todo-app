@@ -1,0 +1,51 @@
+services:
+  # PostgreSQL veritabanı
+  db:
+    image: postgres:16-alpine        # Hafif Alpine tabanlı PostgreSQL 16 image'ı
+    container_name: terra-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}           # Veritabanı adı
+      POSTGRES_USER: ${POSTGRES_USER}        # Kullanıcı adı
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}    # Şifre (.env dosyasından çekilecek)
+    ports:
+      - "5432:5432"                  # Host:Container → localhost:5432'den erişilebilir
+    volumes:
+      - terra-db-data:/var/lib/postgresql/data  # Veriler silinmesin diye volume
+
+  # Adminer — PostgreSQL web arayüzü (http://localhost:8080)
+  adminer:
+    image: adminer
+    container_name: terra-adminer
+    restart: always
+    ports:
+      - "8080:8080"                  # http://localhost:8080 adresinden erişilir
+    depends_on:
+      - db                           # db servisi başlamadan adminer başlamasın
+
+  # Backend API Servisi (http://localhost:5000)
+  api:
+    build: 
+      context: ./src/api
+      dockerfile: Dockerfile
+    container_name: terra-api
+    ports:
+      - "5000:8080"                  # İçerideki 8080 portunu dışarıya 5000 olarak açıyoruz
+    environment:
+      # Veritabanı bağlantı dizesini ortam değişkeni olarak veriyoruz. Host olarak "db" (servis adı) kullanıyoruz.
+      - ConnectionStrings__DefaultConnection=Host=db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+    depends_on:
+      - db                           # db servisi başlamadan api başlamasın
+
+  # Frontend React Servisi (http://localhost:5173)
+  web:
+    build:
+      context: ./src/web
+      dockerfile: Dockerfile
+    container_name: terra-web
+    ports:
+      - "5173:80"                    # Nginx içeride 80'de çalışır, biz 5173'ten erişeceğiz
+    depends_on:
+      - api                          # Backend olmadan frontend'in çalışmasına gerek yok
+
+volumes:
+  terra-db-data:                     # Named volume → docker tarafından yönetilir
