@@ -60,10 +60,11 @@
 ## 🟡 FAZ 2 — CI/CD Pipeline (GitHub Actions)
 
 ### 2.1 🔄 CI Pipeline
-- [ ] `.github/workflows/ci.yml` oluşturulacak
-- [ ] Backend build & test job
-- [ ] Frontend build job
-- [ ] Docker image build & push (Docker Hub veya GHCR)
+- [x] `.github/workflows/ci.yml` oluşturulacak
+- [x] Backend build & test job
+- [x] Frontend build job
+- [x] Docker image build kontrolü (Dockerfiles validation)
+- [ ] Docker image push (Docker Hub veya GHCR) - (CD aşamasında yapılacak)
 
 ### 2.2 🚀 CD Pipeline
 - [ ] `.github/workflows/cd.yml` oluşturulacak
