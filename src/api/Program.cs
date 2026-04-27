@@ -23,14 +23,17 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 3) CORS — tüm originlere izin ver (Öğrenme projesi; production'da kısıtlanmalı)
+// 3) CORS Yapılandırması
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+            "http://localhost:5173",      // Lokal geliştirme adresi
+            "http://18.193.109.220:5173" // AWS Frontend adresi
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 
