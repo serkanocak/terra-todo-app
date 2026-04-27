@@ -67,9 +67,11 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 // Geliştirme ortamında ve test ortamında Swagger arayüzünü aç
-// (Öğrenme projesi olduğu için Production'da da açık bırakıyoruz)
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Veritabanı tablolarını otomatik oluştur (Migration)
 using (var scope = app.Services.CreateScope())
