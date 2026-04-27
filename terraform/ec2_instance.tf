@@ -8,7 +8,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["YOUR_IP/32"]
   }
 
   # HTTP (Web)
@@ -35,14 +35,6 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # PostgreSQL (Eğer dışarıdan bağlanmak istersen)
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -52,12 +44,12 @@ resource "aws_security_group" "ec2_sg" {
 }
 
 resource "aws_instance" "app_server" {
-  ami           = "ami-0084a47cc718c111a" # Ubuntu 22.04 LTS
-  instance_type = "t3.micro"
-  subnet_id     = module.vpc.public_subnets[0]
-  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  ami                         = "ami-0084a47cc718c111a" # Ubuntu 22.04 LTS
+  instance_type               = "t3.micro"
+  subnet_id                   = module.vpc.public_subnets[0]
+  vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true
-  key_name      = "sunucu_key" # Kendi anahtar ismin
+  key_name                    = "sunucu_key" # Kendi anahtar ismin
 
   user_data = <<-EOF
               #!/bin/bash
