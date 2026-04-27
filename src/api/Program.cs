@@ -31,10 +31,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-            "http://localhost:5173",      // Lokal geliştirme adresi
-            "http://18.193.109.220:5173" // AWS Frontend adresi
-        )
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() 
+                             ?? new[] { "http://localhost:5173" };
+        
+        policy.WithOrigins(allowedOrigins)
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
