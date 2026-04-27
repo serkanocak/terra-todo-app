@@ -1,10 +1,23 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Terra.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) Controller desteği ekle
+// Serilog Yapılandırması
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// 1) Controller ve FluentValidation desteği ekle
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // 2) Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
