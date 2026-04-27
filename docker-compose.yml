@@ -31,10 +31,10 @@ services:
     ports:
       - "5000:8080"                  # İçerideki 8080 portunu dışarıya 5000 olarak açıyoruz
     environment:
-      # Veritabanı bağlantı dizesini ortam değişkeni olarak veriyoruz. Host olarak "db" (servis adı) kullanıyoruz.
-      - ConnectionStrings__DefaultConnection=Host=db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Host=db;Database=$${POSTGRES_DB};Username=$${POSTGRES_USER};Password=$${POSTGRES_PASSWORD}
+      - ASPNETCORE_URLS=http://+:8080
     depends_on:
-      - db                           # db servisi başlamadan api başlamasın
+      - db
 
   # Frontend React Servisi (http://localhost:5173)
   web:
