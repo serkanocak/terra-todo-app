@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Plus } from 'lucide-react';
 
 interface AddTodoFormProps {
   onAdd: (title: string) => void;
@@ -24,7 +25,10 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({ onAdd }) => {
         onChange={(e) => setTitle(e.target.value)}
         className="todo-input"
       />
-      <button type="submit" className="add-btn">Ekle</button>
+      <button type="submit" className="add-btn">
+        <Plus size={20} />
+        <span>Ekle</span>
+      </button>
     </form>
   );
 };

@@ -121,22 +121,60 @@ body {
 /* Header */
 .app-header {
   background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
-  padding: 2rem;
+  padding: 1.5rem 2rem;
   text-align: center;
 }
 
-.app-header h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 0.5rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  color: white;
+}
+
+.app-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
   letter-spacing: -0.025em;
   color: white;
+  margin: 0;
+}
+
+.header-logout-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.header-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .app-header p {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 400;
+  text-align: left;
 }
 
 /* Main Content */
@@ -183,6 +221,9 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .add-btn:hover {
@@ -252,12 +293,14 @@ body {
 .delete-btn {
   background: transparent;
   color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
   transition: var(--transition);
   opacity: 0;
 }
@@ -269,6 +312,8 @@ body {
 .delete-btn:hover {
   background: var(--danger);
   color: white;
+  border-color: var(--danger);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
 }
 
 /* Utilities */

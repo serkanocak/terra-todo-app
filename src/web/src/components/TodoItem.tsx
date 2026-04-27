@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trash2 } from 'lucide-react';
 import { Todo } from '../types/todo';
 
 interface TodoItemProps {
@@ -19,8 +20,12 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
         />
         <span className="todo-title">{todo.title}</span>
       </div>
-      <button className="delete-btn" onClick={() => onDelete(todo.id)}>
-        Sil
+      <button 
+        className="delete-btn" 
+        onClick={() => onDelete(todo.id)}
+        title="Sil"
+      >
+        <Trash2 size={18} />
       </button>
     </li>
   );

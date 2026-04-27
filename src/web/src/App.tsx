@@ -82,10 +82,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header />
-      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-          <button onClick={handleLogout} className="logout-button">Logout</button>
-      </div>
+      <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
       
       <main className="main-content">
         <AddTodoForm onAdd={handleAddTodo} />
