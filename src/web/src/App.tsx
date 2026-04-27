@@ -3,12 +3,15 @@ import Header from './components/Header';
 import AddTodoForm from './components/AddTodoForm';
 import TodoList from './components/TodoList';
 import Login from './components/Login';
+import FilterTabs, { FilterType } from './components/FilterTabs';
+import EmptyState from './components/EmptyState';
 import todoService from './services/todoService';
 import { Todo } from './types/todo';
 import './App.css';
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filter, setFilter] = useState<FilterType>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
@@ -31,6 +34,18 @@ function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') return !todo.isCompleted;
+    if (filter === 'completed') return todo.isCompleted;
+    return true;
+  });
+
+  const getEmptyMessage = () => {
+    if (filter === 'active') return "Harika! Devam eden hiç görevin yok.";
+    if (filter === 'completed') return "Henüz tamamlanmış bir görevin bulunmuyor.";
+    return "Henüz bir görev eklememişsin. Hadi bir tane ekleyelim!";
   };
 
   const handleLoginSuccess = () => {
@@ -87,6 +102,8 @@ function App() {
       <main className="main-content">
         <AddTodoForm onAdd={handleAddTodo} />
         
+        <FilterTabs activeFilter={filter} onFilterChange={setFilter} />
+        
         {error && <div className="error-message">{error}</div>}
         
         {loading ? (
@@ -94,12 +111,14 @@ function App() {
             <div className="spinner"></div>
             <p>Görevler Yükleniyor...</p>
           </div>
-        ) : (
+        ) : filteredTodos.length > 0 ? (
           <TodoList 
-            todos={todos} 
+            todos={filteredTodos} 
             onToggle={handleToggleTodo} 
             onDelete={handleDeleteTodo} 
           />
+        ) : (
+          <EmptyState message={getEmptyMessage()} />
         )}
       </main>
     </div>

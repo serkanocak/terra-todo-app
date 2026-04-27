@@ -10,14 +10,6 @@ interface TodoListProps {
 }
 
 const TodoList: React.FC<TodoListProps> = ({ todos, onToggle, onDelete }) => {
-  if (todos.length === 0) {
-    return (
-      <div className="empty-state">
-        <p>🎉 Tüm görevleri tamamladın (veya henüz eklemedin)!</p>
-      </div>
-    );
-  }
-
   return (
     <ul className="todo-list">
       <AnimatePresence mode="popLayout">
