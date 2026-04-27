@@ -31,7 +31,7 @@ services:
     ports:
       - "5000:8080"                  # İçerideki 8080 portunu dışarıya 5000 olarak açıyoruz
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Database=$${POSTGRES_DB};Username=$${POSTGRES_USER};Password=$${POSTGRES_PASSWORD}
+      - ConnectionStrings__DefaultConnection=Host=db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - ASPNETCORE_URLS=http://+:8080
     depends_on:
       - db
@@ -44,8 +44,11 @@ services:
     container_name: terra-web
     ports:
       - "5173:80"                    # Nginx içeride 80'de çalışır, biz 5173'ten erişeceğiz
+    environment:
+      - VITE_API_URL=http://18.193.109.220:5000
     depends_on:
-      - api                          # Backend olmadan frontend'in çalışmasına gerek yok
+      - api
+                          # Backend olmadan frontend'in çalışmasına gerek yok
 
 volumes:
   terra-db-data:                     # Named volume → docker tarafından yönetilir
