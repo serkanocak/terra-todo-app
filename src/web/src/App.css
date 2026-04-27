@@ -5,7 +5,9 @@
   --primary-color: #6366f1; /* Indigo */
   --primary-hover: #4f46e5;
   --bg-color: #0f172a; /* Slate 900 (Koyu Tema) */
-  --card-bg: #1e293b; /* Slate 800 */
+  --card-bg: rgba(30, 41, 59, 0.7); /* Translucent Slate 800 */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --danger: #ef4444;
@@ -31,36 +33,148 @@ body {
   padding: 2rem 1rem;
 }
 
+/* Background Gradient for Login Page */
+.login-page {
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent),
+              radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.15), transparent),
+              var(--bg-color);
+  min-height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
 /* Uygulama Konteyneri */
 .app-container {
   width: 100%;
   max-width: 600px;
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--border-radius);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 2rem;
+}
+
+/* Login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 3.5rem 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-icon-wrapper {
+  background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+}
+
+.login-card h2 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  color: white;
+  letter-spacing: -0.025em;
+}
+
+.login-card p {
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Header */
 .app-header {
   background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
-  padding: 2rem;
+  padding: 1.5rem 2rem;
   text-align: center;
 }
 
-.app-header h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 0.5rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  color: white;
+}
+
+.app-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
   letter-spacing: -0.025em;
   color: white;
+  margin: 0;
+}
+
+.header-logout-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.header-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .app-header p {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 400;
+  text-align: left;
 }
 
 /* Main Content */
@@ -72,9 +186,52 @@ body {
 .add-todo-form {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 0.4rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filter-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.filter-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.filter-tab.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+}
+
+.filter-tab.active:hover {
+  background: var(--primary-hover);
+}
+
+/* Todo List */
 .todo-input {
   flex: 1;
   padding: 0.8rem 1.2rem;
@@ -107,6 +264,9 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .add-btn:hover {
@@ -176,12 +336,14 @@ body {
 .delete-btn {
   background: transparent;
   color: var(--danger);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
   transition: var(--transition);
   opacity: 0;
 }
@@ -193,6 +355,8 @@ body {
 .delete-btn:hover {
   background: var(--danger);
   color: white;
+  border-color: var(--danger);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
 }
 
 /* Utilities */
@@ -201,6 +365,40 @@ body {
   padding: 2rem;
   color: var(--text-muted);
   font-style: italic;
+}
+
+.empty-state-enhanced {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-icon-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.empty-icon {
+  color: var(--primary-color);
+  opacity: 0.5;
+}
+
+.empty-state-enhanced p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 500;
+  max-width: 250px;
+  line-height: 1.5;
 }
 
 .error-message {

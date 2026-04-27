@@ -1,5 +1,6 @@
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { Shield } from 'lucide-react';
 
 interface LoginProps {
   onLoginSuccess: (token: string) => void;
@@ -23,14 +24,23 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
   };
 
   return (
-    <div className="login-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div className="login-card" style={{ padding: '2rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', textAlign: 'center' }}>
+    <div className="login-container">
+      <div className="login-page"></div>
+      <div className="login-card">
+        <div className="login-icon-wrapper">
+          <Shield size={32} color="white" />
+        </div>
         <h2>Welcome to Terra</h2>
-        <p>Please sign in to continue</p>
-        <GoogleLogin
-          onSuccess={handleSuccess}
-          onError={() => console.log('Login Failed')}
-        />
+        <p>Your secure personal task management hub. Please sign in to access your dashboard.</p>
+        <div className="google-login-wrapper">
+          <GoogleLogin
+            onSuccess={handleSuccess}
+            onError={() => console.log('Login Failed')}
+            theme="filled_blue"
+            shape="pill"
+            size="large"
+          />
+        </div>
       </div>
     </div>
   );
