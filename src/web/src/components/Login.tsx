@@ -23,8 +23,8 @@ const Login = ({ onLoginSuccess }: LoginProps) => {
   };
 
   return (
-    <div className="login-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <div className="login-card" style={{ padding: '2rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', borderRadius: '8px', textAlign: 'center' }}>
+    <div className="login-container">
+      <div className="login-card">
         <h2>Welcome to Terra</h2>
         <p>Please sign in to continue</p>
         <GoogleLogin
