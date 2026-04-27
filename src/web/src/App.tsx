@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import AddTodoForm from './components/AddTodoForm';
 import TodoList from './components/TodoList';
+import Login from './components/Login';
 import todoService from './services/todoService';
 import { Todo } from './types/todo';
 import './App.css';
@@ -10,10 +11,13 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
 
   useEffect(() => {
-    fetchTodos();
-  }, []);
+    if (isAuthenticated) {
+      fetchTodos();
+    }
+  }, [isAuthenticated]);
 
   const fetchTodos = async () => {
     try {
@@ -27,6 +31,16 @@ function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    setTodos([]);
   };
 
   const handleAddTodo = async (title: string) => {
@@ -62,9 +76,16 @@ function App() {
     }
   };
 
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="app-container">
       <Header />
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+          <button onClick={handleLogout} className="logout-button">Logout</button>
+      </div>
       
       <main className="main-content">
         <AddTodoForm onAdd={handleAddTodo} />
