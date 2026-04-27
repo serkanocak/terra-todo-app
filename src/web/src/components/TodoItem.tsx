@@ -10,7 +10,7 @@ interface TodoItemProps {
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
   return (
-    <li className={`todo-item ${todo.isCompleted ? 'completed' : ''}`}>
+    <div className={`todo-item ${todo.isCompleted ? 'completed' : ''}`}>
       <div className="todo-content">
         <input
           type="checkbox"
@@ -27,7 +27,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
       >
         <Trash2 size={18} />
       </button>
-    </li>
+    </div>
   );
 };
 
