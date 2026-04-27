@@ -1,15 +1,21 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Terra.Api.Data;
 using Terra.Api.Models;
 
 namespace Terra.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]    // → /api/todos
 public class TodosController : ControllerBase
 {
     private readonly AppDbContext _db;
+
+    // Current user's unique ID from Google (sub)
+    private string UserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
     // DbContext burada Dependency Injection ile geliyor
     public TodosController(AppDbContext db)
@@ -22,6 +28,7 @@ public class TodosController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var todos = await _db.Todos
+            .Where(t => t.UserId == UserId)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
 
@@ -32,7 +39,7 @@ public class TodosController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var todo = await _db.Todos.FindAsync(id);
+        var todo = await _db.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
 
         if (todo is null)
             return NotFound();  // 404
@@ -46,7 +53,8 @@ public class TodosController : ControllerBase
     {
         var todo = new TodoItem
         {
-            Title = request.Title
+            Title = request.Title,
+            UserId = UserId
         };
 
         _db.Todos.Add(todo);
@@ -60,7 +68,7 @@ public class TodosController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTodoRequest request)
     {
-        var todo = await _db.Todos.FindAsync(id);
+        var todo = await _db.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
 
         if (todo is null)
             return NotFound();
@@ -77,7 +85,7 @@ public class TodosController : ControllerBase
     [HttpPatch("{id}/toggle")]
     public async Task<IActionResult> Toggle(Guid id)
     {
-        var todo = await _db.Todos.FindAsync(id);
+        var todo = await _db.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
 
         if (todo is null)
             return NotFound();
@@ -92,7 +100,7 @@ public class TodosController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var todo = await _db.Todos.FindAsync(id);
+        var todo = await _db.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == UserId);
 
         if (todo is null)
             return NotFound();
