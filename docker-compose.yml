@@ -1,54 +1,58 @@
+version: '3.8'
+
 services:
   # PostgreSQL veritabanı
   db:
-    image: postgres:16-alpine        # Hafif Alpine tabanlı PostgreSQL 16 image'ı
+    image: postgres:16-alpine
     container_name: terra-db
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}           # Veritabanı adı
-      POSTGRES_USER: ${POSTGRES_USER}        # Kullanıcı adı
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}    # Şifre (.env dosyasından çekilecek)
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"                  # Host:Container → localhost:5432'den erişilebilir
+      - "5432:5432"
     volumes:
-      - terra-db-data:/var/lib/postgresql/data  # Veriler silinmesin diye volume
+      - terra-db-data:/var/lib/postgresql/data
+    restart: always
 
-  # Adminer — PostgreSQL web arayüzü (http://localhost:8080)
+  # Adminer — PostgreSQL web arayüzü
   adminer:
     image: adminer
     container_name: terra-adminer
-    restart: always
     ports:
-      - "8080:8080"                  # http://localhost:8080 adresinden erişilir
+      - "8080:8080"
     depends_on:
-      - db                           # db servisi başlamadan adminer başlamasın
+      - db
+    restart: always
 
-  # Backend API Servisi (http://localhost:5000)
+  # Backend API Servisi
   api:
     build: 
       context: ./src/api
       dockerfile: Dockerfile
     container_name: terra-api
     ports:
-      - "5000:8080"                  # İçerideki 8080 portunu dışarıya 5000 olarak açıyoruz
+      - "5000:8080"
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - ASPNETCORE_URLS=http://+:8080
     depends_on:
       - db
+    restart: always
 
-  # Frontend React Servisi (http://localhost:5173)
+  # Frontend React Servisi
   web:
     build:
       context: ./src/web
       dockerfile: Dockerfile
     container_name: terra-web
     ports:
-      - "5173:80"                    # Nginx içeride 80'de çalışır, biz 5173'ten erişeceğiz
+      - "5173:80"
     environment:
       - VITE_API_URL=http://18.193.109.220:5000
     depends_on:
       - api
-                          # Backend olmadan frontend'in çalışmasına gerek yok
+    restart: always
 
 volumes:
-  terra-db-data:                     # Named volume → docker tarafından yönetilir
+  terra-db-data:
