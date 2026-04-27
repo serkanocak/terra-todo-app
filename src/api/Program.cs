@@ -10,12 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 3) CORS — React (localhost:5173) API'ye erişebilsin
+// 3) CORS — tüm originlere izin ver (Öğrenme projesi; production'da kısıtlanmalı)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -27,11 +27,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-// Geliştirme ortamında Swagger arayüzünü aç
-if (app.Environment.IsDevelopment())
+// Geliştirme ortamında ve test ortamında Swagger arayüzünü aç
+// (Öğrenme projesi olduğu için Production'da da açık bırakıyoruz)
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Veritabanı tablolarını otomatik oluştur (Migration)
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
 }
 
 app.UseCors("AllowFrontend");
