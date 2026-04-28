@@ -3,12 +3,12 @@ resource "aws_security_group" "ec2_sg" {
   description = "Allow HTTP, SSH and App Ports"
   vpc_id      = module.vpc.vpc_id
 
-  # SSH
+  # SSH (Güvenlik için sadece kendi IP'nizi eklemeniz önerilir)
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP/32"]
+    cidr_blocks = ["0.0.0.0/0"] # Geçici olarak herkese açık, YOUR_IP/32 ile değiştirin
   }
 
   # HTTP (Web)
