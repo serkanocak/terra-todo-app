@@ -145,21 +145,23 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION || 'eu-central-1' }}
 
       - name: Deploy to EC2 via SSM
-        uses: aws-actions/aws-ssm-send-command@v2
-        with:
-          aws-region: ${{ secrets.AWS_REGION || 'eu-central-1' }}
-          instance-ids: ${{ secrets.EC2_INSTANCE_ID }}
-          working-directory: /home/ubuntu/app
-          command: |
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION || 'eu-central-1' }} | docker login --username AWS --password-stdin $(aws sts get-caller-identity --query Account --output text).dkr.ecr.${{ secrets.AWS_REGION || 'eu-central-1' }}.amazonaws.com
-
-            cat <<EOF > .env
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            VITE_API_URL=${{ secrets.VITE_API_URL }}
-            VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-            JWT_KEY=${{ secrets.JWT_KEY }}
-            EOF
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+            --region "${{ secrets.AWS_REGION || 'eu-central-1' }}" \
+            --comment "Deploying updated containers via GitHub Actions" \
+            --parameters 'commands=[
+              "cd /home/ubuntu/app",
+              "aws ecr get-login-password --region ${{ secrets.AWS_REGION || 'eu-central-1' }} | docker login --username AWS --password-stdin $(aws sts get-caller-identity --query Account --output text).dkr.ecr.${{ secrets.AWS_REGION || 'eu-central-1' }}.amazonaws.com",
+              "cat <<EOF > .env",
+              "POSTGRES_DB=${{ secrets.POSTGRES_DB }}",
+              "POSTGRES_USER=${{ secrets.POSTGRES_USER }}",
+              "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}",
+              "VITE_API_URL=${{ secrets.VITE_API_URL }}",
+              "VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}",
+              "JWT_KEY=${{ secrets.JWT_KEY }}",
+              "EOF",
+              "docker-compose pull",
+              "docker-compose up -d --remove-orphans"
+            ]'
