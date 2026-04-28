@@ -15,6 +15,9 @@ RUN npm run build
 # Aşama 2: Serve (Sunum) Aşaması
 FROM nginx:alpine
 
+# Nginx yapılandırmasını kopyala
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Nginx'in default HTML klasöründeki içeriği siliyoruz
 RUN rm -rf /usr/share/nginx/html/*
 
