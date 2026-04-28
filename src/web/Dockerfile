@@ -2,6 +2,14 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
+# Build argümanlarını tanımla (GitHub Actions'dan gelecek)
+ARG VITE_API_URL
+ARG VITE_GOOGLE_CLIENT_ID
+
+# Argümanları ortam değişkenine çevir (Vite'ın görmesi için)
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+
 # Önce paket dosyalarını kopyalayıp bağımlılıkları yüklüyoruz (Cache optimizasyonu için)
 COPY package*.json ./
 RUN npm ci
