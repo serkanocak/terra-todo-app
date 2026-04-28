@@ -135,7 +135,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "docker-compose.yml"
-          target: "/home/ubuntu/app"
+          target: "/home/ubuntu"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -152,6 +152,9 @@ jobs:
             --region "${{ secrets.AWS_REGION || 'eu-central-1' }}" \
             --comment "Deploying updated containers via GitHub Actions" \
             --parameters 'commands=[
+              "mkdir -p /home/ubuntu/app",
+              "mv /home/ubuntu/docker-compose.yml /home/ubuntu/app/docker-compose.yml",
+              "sudo chown -R ubuntu:ubuntu /home/ubuntu/app",
               "cd /home/ubuntu/app",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION || 'eu-central-1' }} | docker login --username AWS --password-stdin $(aws sts get-caller-identity --query Account --output text).dkr.ecr.${{ secrets.AWS_REGION || 'eu-central-1' }}.amazonaws.com",
               "cat <<EOF > .env",
