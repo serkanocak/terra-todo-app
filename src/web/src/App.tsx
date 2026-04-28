@@ -97,30 +97,32 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
-      
-      <main className="main-content">
-        <AddTodoForm onAdd={handleAddTodo} />
+      <div className="main-card">
+        <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         
-        <FilterTabs activeFilter={filter} onFilterChange={setFilter} />
-        
-        {error && <div className="error-message">{error}</div>}
-        
-        {loading ? (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Görevler Yükleniyor...</p>
-          </div>
-        ) : filteredTodos.length > 0 ? (
-          <TodoList 
-            todos={filteredTodos} 
-            onToggle={handleToggleTodo} 
-            onDelete={handleDeleteTodo} 
-          />
-        ) : (
-          <EmptyState message={getEmptyMessage()} />
-        )}
-      </main>
+        <main className="main-content">
+          <AddTodoForm onAdd={handleAddTodo} />
+          
+          <FilterTabs activeFilter={filter} onFilterChange={setFilter} />
+          
+          {error && <div className="error-message">{error}</div>}
+          
+          {loading ? (
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Görevler Yükleniyor...</p>
+            </div>
+          ) : filteredTodos.length > 0 ? (
+            <TodoList 
+              todos={filteredTodos} 
+              onToggle={handleToggleTodo} 
+              onDelete={handleDeleteTodo} 
+            />
+          ) : (
+            <EmptyState message={getEmptyMessage()} />
+          )}
+        </main>
+      </div>
     </div>
   );
 }
