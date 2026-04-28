@@ -75,6 +75,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Diagnostic - Check Secrets Presence
+        run: |
+          echo "Checking if required secrets are set..."
+          if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then echo "AWS_ACCESS_KEY_ID is MISSING"; else echo "AWS_ACCESS_KEY_ID is set"; fi
+          if [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then echo "AWS_SECRET_ACCESS_KEY is MISSING"; else echo "AWS_SECRET_ACCESS_KEY is set"; fi
+          if [ -z "${{ secrets.EC2_INSTANCE_ID }}" ]; then echo "EC2_INSTANCE_ID is MISSING"; else echo "EC2_INSTANCE_ID is set"; fi
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
